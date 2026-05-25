@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新增活動</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  :root {
+    --bg-page: #f4f5f7;
+    --bg-card: #ffffff;
+    --bg-input: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-info: #e6f1fb;
+    --border: rgba(0,0,0,0.12);
+    --border-focus: #378add;
+    --text-primary: #1a1a2e;
+    --text-secondary: #5a6270;
+    --text-tertiary: #9aa3ae;
+    --text-placeholder: #b0b8c1;
+    --accent: #185FA5;
+    --accent-hover: #0C447C;
+    --accent-light: #E6F1FB;
+    --accent-border: #85B7EB;
+    --danger: #E24B4A;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    background: var(--bg-page);
+    padding: 24px 16px 48px;
+    line-height: 1.6;
+  }
+
+  .container { max-width: 860px; margin: 0 auto; }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .page-header i { font-size: 22px; color: var(--accent); }
+  .page-header h1 { font-size: 20px; font-weight: 500; color: var(--text-primary); }
+
+  .card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin-bottom: 14px;
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding-bottom: 12px;
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-title i { font-size: 15px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .full { grid-column: 1 / -1; }
+
+  .fg { display: flex; flex-direction: column; gap: 5px; }
+
+  label.lbl, .lbl {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .req { color: var(--danger); margin-left: 2px; }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="time"],
+  input[type="datetime-local"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    color: var(--text-primary);
+    background: var(--bg-input);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0 12px;
+    height: 36px;
+    outline: none;
+    transition: border-color .15s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  input::placeholder, textarea::placeholder { color: var(--text-placeholder); }
+  input:focus, select:focus, textarea:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(55,138,221,0.12); }
+  textarea { height: auto; min-height: 80px; padding: 10px 12px; resize: vertical; line-height: 1.6; }
+
+  .input-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .input-icon-wrap i {
+    position: absolute;
+    left: 10px;
+    font-size: 15px;
+    color: var(--text-tertiary);
+    pointer-events: none;
+  }
+  .input-icon-wrap input { padding-left: 32px; }
+
+  select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239aa3ae' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+  }
+
+  /* Tags */
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; padding: 6px 0; }
+  .tag {
+    font-size: 12px;
+    padding: 5px 13px;
+    border-radius: 100px;
+    border: 0.5px solid var(--border);
+    cursor: pointer;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    transition: all .12s;
+    user-select: none;
+  }
+  .tag:hover { border-color: var(--accent-border); color: var(--accent); background: var(--accent-light); }
+  .tag.on { background: var(--accent-light); color: #0C447C; border-color: var(--accent-border); font-weight: 500; }
+
+  /* Category dropdown */
+  .cat-trigger {
+    width: 100%;
+    height: 36px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0 12px;
+    font-size: 13px;
+    color: var(--text-primary);
+    background: var(--bg-input);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: border-color .15s;
+  }
+  .cat-trigger:hover { border-color: var(--border-focus); }
+  .cat-trigger.empty span { color: var(--text-placeholder); }
+  .cat-trigger i { font-size: 14px; color: var(--text-tertiary); transition: transform .15s; }
+  .cat-trigger.open i { transform: rotate(180deg); }
+
+  .cat-dropdown {
+    display: none;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-top: 4px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .cat-dropdown.open { display: block; }
+
+  .cat-list { max-height: 200px; overflow-y: auto; }
+  .cat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 14px;
+    font-size: 13px;
+    color: var(--text-primary);
+    cursor: pointer;
+    border-bottom: 0.5px solid var(--border);
+    transition: background .1s;
+  }
+  .cat-item:last-child { border-bottom: none; }
+  .cat-item:hover { background: var(--bg-secondary); }
+  .cat-item.selected { background: var(--accent-light); color: #0C447C; }
+  .cat-item-name { display: flex; align-items: center; gap: 8px; }
+  .cat-item-name i { font-size: 14px; color: var(--text-tertiary); }
+  .cat-item.selected .cat-item-name i { color: var(--accent); }
+  .cat-del {
+    width: 22px; height: 22px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all .1s;
+  }
+  .cat-del:hover { background: #fde8e8; color: var(--danger); }
+  .cat-del i { font-size: 12px; }
+
+  .cat-add-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--bg-secondary);
+    border-top: 0.5px solid var(--border);
+  }
+  .cat-add-row input {
+    flex: 1;
+    height: 32px;
+    font-size: 12px;
+  }
+  .btn-add-cat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    border: 0.5px solid var(--accent-border);
+    border-radius: var(--radius-md);
+    padding: 6px 12px;
+    cursor: pointer;
+    background: var(--accent-light);
+    white-space: nowrap;
+    font-family: 'Noto Sans TC', sans-serif;
+    transition: background .12s;
+  }
+  .btn-add-cat:hover { background: #d0e8f8; }
+  .btn-add-cat i { font-size: 14px; }
+
+  /* Toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .toggle-row:last-child { border-bottom: none; }
+  .toggle-info { display: flex; flex-direction: column; gap: 2px; }
+  .toggle-label { font-size: 13px; color: var(--text-primary); }
+  .toggle-desc { font-size: 11px; color: var(--text-tertiary); }
+  .toggle-switch {
+    width: 38px; height: 20px;
+    border-radius: 100px;
+    background: #d0d5dd;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background .2s;
+  }
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    top: 2px; left: 2px;
+    transition: left .2s;
+  }
+  .toggle-switch.on { background: var(--accent); }
+  .toggle-switch.on::after { left: 20px; }
+
+  /* Radio */
+  .radio-row { display: flex; gap: 18px; padding: 4px 0; flex-wrap: wrap; }
+  .radio-opt {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: var(--text-primary);
+    cursor: pointer;
+    user-select: none;
+  }
+  .radio-dot {
+    width: 17px; height: 17px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--bg-input);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color .15s;
+  }
+  .radio-dot.on { border-color: var(--accent); }
+  .radio-dot.on::after {
+    content: '';
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* Image upload */
+  .img-drop {
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius-md);
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .img-drop:hover { border-color: var(--accent-border); background: var(--accent-light); }
+  .img-drop i { font-size: 24px; color: var(--text-tertiary); }
+  .img-drop span { font-size: 12px; color: var(--text-tertiary); }
+  .img-hint { font-size: 11px; color: var(--text-tertiary); display: flex; align-items: center; gap: 4px; margin-top: 6px; }
+  .img-hint i { font-size: 13px; }
+
+  /* Divider section */
+  .divider-section { border-top: 0.5px solid var(--border); margin-top: 14px; padding-top: 14px; display: flex; flex-direction: column; gap: 4px; }
+
+  /* Actions */
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 4px;
+  }
+  .btn-ghost {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    color: var(--text-secondary);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 8px 18px;
+    cursor: pointer;
+    background: transparent;
+    transition: background .12s;
+  }
+  .btn-ghost:hover { background: var(--bg-secondary); }
+  .btn-primary {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 8px 22px;
+    cursor: pointer;
+    transition: background .12s;
+  }
+  .btn-primary:hover { background: var(--accent-hover); }
+
+  @media (max-width: 600px) {
+    .grid2, .grid3 { grid-template-columns: 1fr; }
+    .full { grid-column: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="page-header">
+    <i class="ti ti-calendar-plus"></i>
+    <h1>新增活動</h1>
+  </div>
+
+  <!-- 基本資訊 -->
+  <div class="card">
+    <div class="card-title"><i class="ti ti-info-circle"></i>基本資訊</div>
+    <div class="grid2">
+      <div class="fg full">
+        <label class="lbl">活動名稱<span class="req">*</span></label>
+        <input type="text" placeholder="請輸入活動名稱">
+      </div>
+      <div class="fg full">
+        <label class="lbl">活動簡介</label>
+        <textarea rows="2" placeholder="請輸入活動簡介（顯示於列表卡片）…"></textarea>
+      </div>
+      <div class="fg full">
+        <label class="lbl">活動內容說明<span class="req">*</span></label>
+        <textarea rows="4" placeholder="詳細說明活動內容、備註事項等…"></textarea>
+      </div>
+      <div class="fg">
+        <label class="lbl">承辦單位<span class="req">*</span></label>
+        <input type="text" placeholder="例：學生事務處課外活動指導組">
+      </div>
+      <div class="fg">
+        <label class="lbl">聯絡人</label>
+        <input type="text" placeholder="聯絡人姓名">
+      </div>
+      <div class="fg">
+        <label class="lbl">聯絡電話</label>
+        <div class="input-icon-wrap">
+          <i class="ti ti-phone"></i>
+          <input type="tel" placeholder="02-XXXXXXXX#分機">
+        </div>
+      </div>
+      <div class="fg">
+        <label class="lbl">授課人 / 講師</label>
+        <input type="text" placeholder="例：社團同學、教授姓名">
+      </div>
+    </div>
+  </div>
+
+  <!-- 活動分類 -->
+  <div class="card">
+    <div class="card-title"><i class="ti ti-tag"></i>活動分類（台大）</div>
+
+    <div class="fg" style="margin-bottom:16px;">
+      <label class="lbl">主分類<span class="req">*</span></label>
+      <div class="cat-trigger empty" id="cat-trigger" onclick="toggleDropdown()">
+        <span id="cat-display">請選擇主分類</span>
+        <i class="ti ti-chevron-down"></i>
+      </div>
+      <div class="cat-dropdown" id="cat-dropdown">
+        <div class="cat-list" id="cat-list"></div>
+        <div class="cat-add-row">
+          <input type="text" id="new-cat-input" placeholder="輸入新分類名稱…" onkeydown="if(event.key==='Enter')addCategory()">
+          <button class="btn-add-cat" onclick="addCategory()"><i class="ti ti-plus"></i>新增分類</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="fg" style="margin-bottom:6px;">
+      <label class="lbl">依標籤分類（免費名單、免費餐點、遠距參加等）</label>
+      <span style="font-size:11px;color:var(--text-tertiary);">可複選多個標籤</span>
+    </div>
+    <div class="tags" id="tag-list">
+      <span class="tag" onclick="toggleTag(this)">#免報名費</span>
+      <span class="tag on" onclick="toggleTag(this)">#學生</span>
+      <span class="tag" onclick="toggleTag(this)">#教師</span>
+      <span class="tag" onclick="toggleTag(this)">#免費餐點</span>
+      <span class="tag" onclick="toggleTag(this)">#遠距參加</span>
+      <span class="tag" onclick="toggleTag(this)">#校友</span>
+      <span class="tag" onclick="toggleTag(this)">#校外人士</span>
+    </div>
+
+    <div class="fg" style="margin-top:14px;">
+      <label class="lbl">參加對象<span class="req">*</span></label>
+      <div class="radio-row">
+        <label class="radio-opt"><div class="radio-dot on"></div>不限</label>
+        <label class="radio-opt"><div class="radio-dot"></div>本校學生</label>
+        <label class="radio-opt"><div class="radio-dot"></div>本校教職員</label>
+        <label class="radio-opt"><div class="radio-dot"></div>校外人士</label>
+        <label class="radio-opt"><div class="radio-dot"></div>自訂</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 時間與地點 -->
+  <div class="card">
+    <div class="card-title"><i class="ti ti-clock"></i>時間與地點</div>
+    <div class="grid3">
+      <div class="fg">
+        <label class="lbl">活動日期<span class="req">*</span></label>
+        <div class="input-icon-wrap">
+          <i class="ti ti-calendar"></i>
+          <input type="date">
+        </div>
+      </div>
+      <div class="fg">
+        <label class="lbl">開始時間<span class="req">*</span></label>
+        <div class="input-icon-wrap">
+          <i class="ti ti-clock"></i>
+          <input type="time">
+        </div>
+      </div>
+      <div class="fg">
+        <label class="lbl">結束時間<span class="req">*</span></label>
+        <div class="input-icon-wrap">
+          <i class="ti ti-clock"></i>
+          <input type="time">
+        </div>
+      </div>
+      <div class="fg full">
+        <label class="lbl">活動地點<span class="req">*</span></label>
+        <div class="input-icon-wrap">
+          <i class="ti ti-map-pin"></i>
+          <input type="text" placeholder="例：綜合體育館(新體)B1桌球室">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 報名設定 -->
+  <div class="card">
+    <div class="card-title"><i class="ti ti-forms"></i>報名設定</div>
+    <div class="grid2">
+      <div class="fg">
+        <label class="lbl">報名開始時間<span class="req">*</span></label>
+        <input type="datetime-local">
+      </div>
+      <div class="fg">
+        <label class="lbl">報名截止時間<span class="req">*</span></label>
+        <input type="datetime-local">
+      </div>
+      <div class="fg">
+        <label class="lbl">報名類型<span class="req">*</span></label>
+        <select>
+          <option>自由報名</option>
+          <option>審核制</option>
+          <option>抽籤制</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label class="lbl">名額上限</label>
+        <div class="input-icon-wrap">
+          <i class="ti ti-users"></i>
+          <input type="number" placeholder="留空表示無限制" min="1">
+        </div>
+      </div>
+    </div>
+    <div class="divider-section">
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-label">提供用餐</div>
+          <div class="toggle-desc">開啟後報名頁面將顯示「提供用餐」</div>
+        </div>
+        <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-label">開放候補名單</div>
+          <div class="toggle-desc">額滿後可加入候補，依序遞補</div>
+        </div>
+        <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 封面圖片 -->
+  <div class="card">
+    <div class="card-title"><i class="ti ti-photo"></i>封面圖片</div>
+    <div class="img-drop" onclick="document.getElementById('file-input').click()">
+      <i class="ti ti-photo-up"></i>
+      <span>點擊上傳或拖曳圖片至此（建議尺寸 1200×600）</span>
+    </div>
+    <input type="file" id="file-input" accept="image/*" style="display:none">
+    <div class="img-hint"><i class="ti ti-info-circle"></i>支援 JPG、PNG，檔案大小上限 5MB</div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-ghost">儲存草稿</button>
+    <button class="btn-ghost">預覽</button>
+    <button class="btn-primary">發佈活動</button>
+  </div>
+
+</div>
+
+<script>
+var categories = ['校慶活動','學術講座','社團活動','體育競技','藝文展演','志工服務','就業實習','國際交流'];
+var selected = null;
+
+function renderList() {
+  var list = document.getElementById('cat-list');
+  list.innerHTML = '';
+  categories.forEach(function(c, i) {
+    var item = document.createElement('div');
+    item.className = 'cat-item' + (selected === c ? ' selected' : '');
+    item.innerHTML =
+      '<div class="cat-item-name"><i class="ti ti-' + (selected === c ? 'check' : 'grip-vertical') + '"></i>' + c + '</div>' +
+      '<div class="cat-del" title="刪除此分類"><i class="ti ti-x"></i></div>';
+    item.querySelector('.cat-item-name').addEventListener('click', function() { selectCategory(c); });
+    item.querySelector('.cat-del').addEventListener('click', function(e) { e.stopPropagation(); deleteCategory(i); });
+    list.appendChild(item);
+  });
+}
+
+function selectCategory(c) {
+  selected = c;
+  var trigger = document.getElementById('cat-trigger');
+  document.getElementById('cat-display').textContent = c;
+  trigger.classList.remove('empty');
+  renderList();
+  closeDropdown();
+}
+
+function toggleDropdown() {
+  var trigger = document.getElementById('cat-trigger');
+  var dropdown = document.getElementById('cat-dropdown');
+  var isOpen = dropdown.classList.contains('open');
+  if (isOpen) {
+    closeDropdown();
+  } else {
+    dropdown.classList.add('open');
+    trigger.classList.add('open');
+    renderList();
+  }
+}
+
+function closeDropdown() {
+  document.getElementById('cat-dropdown').classList.remove('open');
+  document.getElementById('cat-trigger').classList.remove('open');
+}
+
+function addCategory() {
+  var input = document.getElementById('new-cat-input');
+  var val = input.value.trim();
+  if (!val) return;
+  if (categories.indexOf(val) === -1) {
+    categories.push(val);
+    renderList();
+  }
+  input.value = '';
+  input.focus();
+}
+
+function deleteCategory(idx) {
+  if (selected === categories[idx]) {
+    selected = null;
+    document.getElementById('cat-display').textContent = '請選擇主分類';
+    document.getElementById('cat-trigger').classList.add('empty');
+  }
+  categories.splice(idx, 1);
+  renderList();
+}
+
+function toggleTag(el) {
+  el.classList.toggle('on');
+}
+
+document.addEventListener('click', function(e) {
+  var dropdown = document.getElementById('cat-dropdown');
+  var trigger = document.getElementById('cat-trigger');
+  if (dropdown.classList.contains('open') && !dropdown.contains(e.target) && !trigger.contains(e.target)) {
+    closeDropdown();
+  }
+});
+
+renderList();
+</script>
+</body>
+</html>
