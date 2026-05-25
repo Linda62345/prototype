@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理員個人頁面</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root {
+  --bg-page: #f4f5f7;
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-info: #e6f1fb;
+  --border: rgba(0,0,0,0.12);
+  --border-focus: #378add;
+  --text-primary: #1a1a2e;
+  --text-secondary: #5a6270;
+  --text-tertiary: #9aa3ae;
+  --text-placeholder: #b0b8c1;
+  --accent: #185FA5;
+  --accent-hover: #0C447C;
+  --accent-light: #E6F1FB;
+  --accent-border: #85B7EB;
+  --danger: #E24B4A;
+  --danger-light: #fde8e8;
+  --success: #3B6D11;
+  --success-light: #EAF3DE;
+  --warning: #854F0B;
+  --warning-light: #FAEEDA;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+.nav {
+  background: var(--bg-card);
+  border-bottom: 0.5px solid var(--border);
+  height: 54px;
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-left { display: flex; align-items: center; gap: 20px; }
+.nav-logo { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+.nav-links { display: flex; gap: 4px; }
+.nav-link {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 5px 10px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .12s;
+}
+.nav-link:hover { background: var(--bg-secondary); }
+.nav-right { display: flex; align-items: center; gap: 8px; }
+.lang-btn {
+  font-size: 12px;
+  color: var(--text-secondary);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 5px 10px;
+  cursor: pointer;
+  background: transparent;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+.admin-badge {
+  font-size: 11px;
+  background: var(--warning-light);
+  color: var(--warning);
+  border-radius: var(--radius-md);
+  padding: 4px 9px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-add-nav {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 7px 13px;
+  cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: background .12s;
+}
+.btn-add-nav:hover { background: var(--accent-hover); }
+
+/* ── LAYOUT ── */
+.page-wrap { max-width: 980px; margin: 0 auto; padding: 28px 16px 60px; }
+
+/* ── PROFILE HEADER ── */
+.profile-header {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.profile-info { flex: 1; }
+.profile-name { font-size: 17px; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; }
+.profile-role { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+.profile-stats {
+  display: flex;
+  gap: 24px;
+}
+.stat { text-align: center; }
+.stat-val { font-size: 20px; font-weight: 500; color: var(--text-primary); }
+.stat-lbl { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.toolbar-left { display: flex; align-items: center; gap: 8px; }
+.section-title { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+.toolbar-right { display: flex; align-items: center; gap: 8px; }
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 6px 12px;
+  background: var(--bg-card);
+}
+.search-box i { font-size: 15px; color: var(--text-tertiary); }
+.search-box input {
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: transparent;
+  font-family: 'Noto Sans TC', sans-serif;
+  width: 160px;
+}
+.search-box input::placeholder { color: var(--text-placeholder); }
+.filter-tabs { display: flex; gap: 4px; }
+.filter-tab {
+  font-size: 12px;
+  color: var(--text-secondary);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 5px 12px;
+  cursor: pointer;
+  background: var(--bg-card);
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: all .12s;
+}
+.filter-tab:hover { border-color: var(--accent-border); color: var(--accent); }
+.filter-tab.on { background: var(--accent-light); color: var(--accent); border-color: var(--accent-border); font-weight: 500; }
+
+/* ── EVENT CARDS GRID ── */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.event-card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color .15s;
+}
+.event-card:hover { border-color: var(--accent-border); }
+.event-thumb {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(135deg, #d0e8f8 0%, #b5d4f4 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.event-thumb i { font-size: 36px; color: #85B7EB; }
+.event-thumb-2 { background: linear-gradient(135deg, #EAF3DE 0%, #C0DD97 100%); }
+.event-thumb-2 i { color: #97C459; }
+.event-thumb-3 { background: linear-gradient(135deg, #FAEEDA 0%, #FAC775 100%); }
+.event-thumb-3 i { color: #EF9F27; }
+.event-thumb-4 { background: linear-gradient(135deg, #EEEDFE 0%, #CECBF6 100%); }
+.event-thumb-4 i { color: #AFA9EC; }
+.event-thumb-5 { background: linear-gradient(135deg, #E1F5EE 0%, #9FE1CB 100%); }
+.event-thumb-5 i { color: #5DCAA5; }
+.status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 100px;
+}
+.badge-active { background: var(--success-light); color: var(--success); }
+.badge-ended { background: #f1efe8; color: #5f5e5a; }
+.badge-draft { background: var(--warning-light); color: var(--warning); }
+.badge-upcoming { background: var(--accent-light); color: var(--accent); }
+
+.event-body { padding: 14px 16px; }
+.event-cat {
+  font-size: 11px;
+  color: var(--accent);
+  background: var(--accent-light);
+  border-radius: 100px;
+  padding: 2px 8px;
+  display: inline-block;
+  margin-bottom: 7px;
+}
+.event-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.event-meta { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.event-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.event-meta-row i { font-size: 13px; color: var(--text-tertiary); flex-shrink: 0; }
+.event-reg {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-top: 0.5px solid var(--border);
+  margin-bottom: 10px;
+}
+.reg-count { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; }
+.reg-count i { font-size: 13px; color: var(--text-tertiary); }
+.reg-num { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.progress-bar {
+  width: 80px;
+  height: 4px;
+  background: var(--bg-secondary);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.progress-fill { height: 100%; border-radius: 100px; background: var(--accent); }
+
+.event-actions { display: flex; gap: 6px; }
+.btn-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: all .12s;
+}
+.btn-edit {
+  color: var(--text-secondary);
+  border: 0.5px solid var(--border);
+  background: var(--bg-card);
+}
+.btn-edit:hover { border-color: var(--accent-border); color: var(--accent); background: var(--accent-light); }
+.btn-reg {
+  color: #fff;
+  border: none;
+  background: var(--accent);
+}
+.btn-reg:hover { background: var(--accent-hover); }
+
+/* ── MODAL OVERLAY ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 200;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 720px;
+  border: 0.5px solid var(--border);
+  animation: slideUp .18s ease;
+  margin: auto;
+}
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 0.5px solid var(--border);
+}
+.modal-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 500; }
+.modal-title i { font-size: 18px; color: var(--accent); }
+.modal-close {
+  width: 30px; height: 30px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-tertiary);
+  font-size: 18px;
+  transition: background .12s;
+}
+.modal-close:hover { background: var(--bg-secondary); color: var(--text-primary); }
+.modal-body { padding: 20px; max-height: calc(100vh - 120px); overflow-y: auto; }
+
+/* ── EDIT FORM (inside modal) ── */
+.card-inner {
+  background: var(--bg-secondary);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.card-inner-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.card-inner-title i { font-size: 13px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.full { grid-column: 1 / -1; }
+.fg { display: flex; flex-direction: column; gap: 4px; }
+.lbl { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+.req { color: var(--danger); margin-left: 2px; }
+input[type="text"], input[type="tel"], input[type="date"],
+input[type="time"], input[type="datetime-local"], input[type="number"],
+select, textarea {
+  width: 100%;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0 10px;
+  height: 34px;
+  outline: none;
+  transition: border-color .15s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input::placeholder, textarea::placeholder { color: var(--text-placeholder); }
+input:focus, select:focus, textarea:focus { border-color: var(--border-focus); }
+textarea { height: auto; min-height: 72px; padding: 8px 10px; resize: vertical; }
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239aa3ae' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+.input-icon { position: relative; display: flex; align-items: center; }
+.input-icon i { position: absolute; left: 9px; font-size: 14px; color: var(--text-tertiary); pointer-events: none; }
+.input-icon input { padding-left: 30px; }
+.tags-edit { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0; }
+.tag-e {
+  font-size: 12px;
+  padding: 4px 11px;
+  border-radius: 100px;
+  border: 0.5px solid var(--border);
+  cursor: pointer;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+}
+.tag-e.on { background: var(--accent-light); color: #0C447C; border-color: var(--accent-border); }
+.toggle-r {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.toggle-r:last-child { border-bottom: none; }
+.toggle-sw {
+  width: 36px; height: 18px; border-radius: 100px;
+  background: #d0d5dd; position: relative; cursor: pointer; flex-shrink: 0;
+  transition: background .2s;
+}
+.toggle-sw::after {
+  content: ''; position: absolute;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #fff; top: 2px; left: 2px; transition: left .2s;
+}
+.toggle-sw.on { background: var(--accent); }
+.toggle-sw.on::after { left: 20px; }
+.img-drop-sm {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  height: 60px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  cursor: pointer; color: var(--text-tertiary); font-size: 12px;
+}
+.img-drop-sm i { font-size: 18px; }
+.modal-footer {
+  display: flex; justify-content: flex-end; gap: 8px;
+  padding: 14px 20px;
+  border-top: 0.5px solid var(--border);
+}
+.btn-ghost-sm {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 13px; color: var(--text-secondary);
+  border: 0.5px solid var(--border); border-radius: var(--radius-md);
+  padding: 7px 16px; cursor: pointer; background: transparent;
+}
+.btn-ghost-sm:hover { background: var(--bg-secondary); }
+.btn-primary-sm {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 13px; font-weight: 500; color: #fff;
+  background: var(--accent); border: none; border-radius: var(--radius-md);
+  padding: 7px 20px; cursor: pointer;
+}
+.btn-primary-sm:hover { background: var(--accent-hover); }
+
+/* ── REGISTRATIONS VIEW ── */
+.reg-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
+}
+.reg-toolbar-left { display: flex; align-items: center; gap: 8px; }
+.reg-toolbar-right { display: flex; align-items: center; gap: 6px; }
+.search-sm {
+  display: flex; align-items: center; gap: 6px;
+  border: 0.5px solid var(--border); border-radius: var(--radius-md);
+  padding: 5px 10px; background: var(--bg-secondary);
+}
+.search-sm i { font-size: 14px; color: var(--text-tertiary); }
+.search-sm input {
+  border: none; background: transparent; font-size: 12px;
+  color: var(--text-primary); outline: none; width: 120px; height: auto; padding: 0;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+.btn-filter {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 12px; color: var(--text-secondary);
+  border: 0.5px solid var(--border); border-radius: var(--radius-md);
+  padding: 5px 11px; cursor: pointer; background: transparent;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+.btn-export {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 500; color: #fff;
+  background: #0F6E56; border: none; border-radius: var(--radius-md);
+  padding: 6px 13px; cursor: pointer; font-family: 'Noto Sans TC', sans-serif;
+  transition: background .12s;
+}
+.btn-export:hover { background: #085041; }
+.stats-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px;
+}
+.stat-card {
+  background: var(--bg-secondary); border-radius: var(--radius-md);
+  padding: 12px 14px;
+}
+.stat-card .val { font-size: 22px; font-weight: 500; color: var(--text-primary); }
+.stat-card .lbl { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+.table-wrap {
+  border: 0.5px solid var(--border); border-radius: var(--radius-md); overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+thead tr { background: var(--bg-secondary); }
+th {
+  font-size: 11px; font-weight: 500; color: var(--text-secondary);
+  text-align: left; padding: 9px 12px;
+  border-bottom: 0.5px solid var(--border);
+}
+td {
+  font-size: 12px; color: var(--text-primary);
+  padding: 9px 12px; border-bottom: 0.5px solid var(--border);
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg-secondary); }
+.pill {
+  font-size: 11px; padding: 2px 9px; border-radius: 100px; display: inline-block;
+}
+.pill-ok { background: var(--success-light); color: var(--success); }
+.pill-wait { background: var(--warning-light); color: var(--warning); }
+.pill-cancel { background: #fcebeb; color: #a32d2d; }
+
+/* ── CAT DROPDOWN ── */
+.cat-trigger-e {
+  width: 100%; height: 34px;
+  border: 0.5px solid var(--border); border-radius: var(--radius-md);
+  padding: 0 10px; font-size: 13px; color: var(--text-primary);
+  background: var(--bg-input); display: flex; align-items: center;
+  justify-content: space-between; cursor: pointer; transition: border-color .15s;
+}
+.cat-trigger-e i { font-size: 14px; color: var(--text-tertiary); transition: transform .15s; }
+.cat-trigger-e.open i { transform: rotate(180deg); }
+.cat-dd {
+  display: none; border: 0.5px solid var(--border); border-radius: var(--radius-md);
+  overflow: hidden; margin-top: 3px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08); position: relative; z-index: 10;
+}
+.cat-dd.open { display: block; }
+.cat-dd-list { max-height: 160px; overflow-y: auto; }
+.cat-dd-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; font-size: 13px; color: var(--text-primary);
+  cursor: pointer; border-bottom: 0.5px solid var(--border);
+}
+.cat-dd-item:last-child { border-bottom: none; }
+.cat-dd-item:hover { background: var(--bg-secondary); }
+.cat-dd-item.sel { background: var(--accent-light); color: #0C447C; }
+.cat-dd-add {
+  display: flex; align-items: center; gap: 7px;
+  padding: 8px 12px; background: var(--bg-secondary); border-top: 0.5px solid var(--border);
+}
+.cat-dd-add input {
+  flex: 1; height: 28px; font-size: 12px; padding: 0 8px;
+}
+.cat-dd-add button {
+  font-family: 'Noto Sans TC', sans-serif;
+  display: flex; align-items: center; gap: 3px;
+  font-size: 11px; font-weight: 500; color: var(--accent);
+  border: 0.5px solid var(--accent-border); border-radius: var(--radius-sm);
+  padding: 5px 10px; cursor: pointer; background: var(--accent-light); white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .profile-stats { display: none; }
+  .grid2, .grid3 { grid-template-columns: 1fr; }
+  .full { grid-column: 1; }
+  .events-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-left">
+    <span class="nav-logo">活動平台</span>
+    <div class="nav-links">
+      <a class="nav-link" href="#">首頁</a>
+      <a class="nav-link" href="#">所有活動</a>
+      <a class="nav-link" href="#">關於我們</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span class="admin-badge"><i class="ti ti-shield"></i>管理員</span>
+    <button class="lang-btn">繁體中文</button>
+    <button class="btn-add-nav" onclick="openEdit(null)"><i class="ti ti-plus"></i>新增活動</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- PROFILE HEADER -->
+  <div class="profile-header">
+    <div class="avatar">王</div>
+    <div class="profile-info">
+      <div class="profile-name">王小明</div>
+      <div class="profile-role">
+        <i class="ti ti-shield" style="font-size:13px;color:var(--accent);"></i>
+        系統管理員・學生事務處課外活動指導組
+      </div>
+    </div>
+    <div class="profile-stats">
+      <div class="stat">
+        <div class="stat-val">12</div>
+        <div class="stat-lbl">已發布活動</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">3</div>
+        <div class="stat-lbl">進行中</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">486</div>
+        <div class="stat-lbl">總報名人數</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <span class="section-title">我發布的活動</span>
+    </div>
+    <div class="toolbar-right">
+      <div class="search-box">
+        <i class="ti ti-search"></i>
+        <input placeholder="搜尋活動名稱…">
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab on" onclick="filterTab(this)">全部</button>
+        <button class="filter-tab" onclick="filterTab(this)">進行中</button>
+        <button class="filter-tab" onclick="filterTab(this)">即將開始</button>
+        <button class="filter-tab" onclick="filterTab(this)">已結束</button>
+        <button class="filter-tab" onclick="filterTab(this)">草稿</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENTS GRID -->
+  <div class="events-grid">
+
+    <div class="event-card">
+      <div class="event-thumb event-thumb-2">
+        <i class="ti ti-tree"></i>
+        <span class="status-badge badge-active">進行中</span>
+      </div>
+      <div class="event-body">
+        <span class="event-cat">校慶活動</span>
+        <div class="event-title">114年校慶園遊會活動</div>
+        <div class="event-meta">
+          <div class="event-meta-row"><i class="ti ti-calendar"></i>2025-11-15　11:30 – 12:30</div>
+          <div class="event-meta-row"><i class="ti ti-map-pin"></i>綜合體育館(新體)B1桌球室</div>
+        </div>
+        <div class="event-reg">
+          <div class="reg-count"><i class="ti ti-users"></i><span>報名人數</span></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="reg-num">0 / 3</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:0%;"></div></div>
+          </div>
+        </div>
+        <div class="event-actions">
+          <button class="btn-action btn-edit" onclick="openEdit('114年校慶園遊會活動')"><i class="ti ti-edit" style="font-size:13px;"></i>編輯</button>
+          <button class="btn-action btn-reg" onclick="openReg('114年校慶園遊會活動', 0, 3)"><i class="ti ti-clipboard-list" style="font-size:13px;"></i>報名資訊</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="event-card">
+      <div class="event-thumb event-thumb-3">
+        <i class="ti ti-podium"></i>
+        <span class="status-badge badge-active">進行中</span>
+      </div>
+      <div class="event-body">
+        <span class="event-cat">學術講座</span>
+        <div class="event-title">2025 AI 與未來教育國際研討會</div>
+        <div class="event-meta">
+          <div class="event-meta-row"><i class="ti ti-calendar"></i>2025-11-20　09:00 – 17:00</div>
+          <div class="event-meta-row"><i class="ti ti-map-pin"></i>社會科學院第一會議室</div>
+        </div>
+        <div class="event-reg">
+          <div class="reg-count"><i class="ti ti-users"></i><span>報名人數</span></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="reg-num">87 / 120</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:72%;"></div></div>
+          </div>
+        </div>
+        <div class="event-actions">
+          <button class="btn-action btn-edit" onclick="openEdit('2025 AI 與未來教育國際研討會')"><i class="ti ti-edit" style="font-size:13px;"></i>編輯</button>
+          <button class="btn-action btn-reg" onclick="openReg('2025 AI 與未來教育國際研討會', 87, 120)"><i class="ti ti-clipboard-list" style="font-size:13px;"></i>報名資訊</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="event-card">
+      <div class="event-thumb event-thumb-4">
+        <i class="ti ti-ball-basketball"></i>
+        <span class="status-badge badge-upcoming">即將開始</span>
+      </div>
+      <div class="event-body">
+        <span class="event-cat">體育競技</span>
+        <div class="event-title">第三屆系際籃球聯賽報名</div>
+        <div class="event-meta">
+          <div class="event-meta-row"><i class="ti ti-calendar"></i>2025-12-05　13:00 – 18:00</div>
+          <div class="event-meta-row"><i class="ti ti-map-pin"></i>體育館主場地</div>
+        </div>
+        <div class="event-reg">
+          <div class="reg-count"><i class="ti ti-users"></i><span>報名人數</span></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="reg-num">24 / 32</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:75%;"></div></div>
+          </div>
+        </div>
+        <div class="event-actions">
+          <button class="btn-action btn-edit" onclick="openEdit('第三屆系際籃球聯賽報名')"><i class="ti ti-edit" style="font-size:13px;"></i>編輯</button>
+          <button class="btn-action btn-reg" onclick="openReg('第三屆系際籃球聯賽報名', 24, 32)"><i class="ti ti-clipboard-list" style="font-size:13px;"></i>報名資訊</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="event-card">
+      <div class="event-thumb">
+        <i class="ti ti-music"></i>
+        <span class="status-badge badge-ended">已結束</span>
+      </div>
+      <div class="event-body">
+        <span class="event-cat">藝文展演</span>
+        <div class="event-title">2025 夏季音樂節暨社團成果展</div>
+        <div class="event-meta">
+          <div class="event-meta-row"><i class="ti ti-calendar"></i>2025-06-28　15:00 – 21:00</div>
+          <div class="event-meta-row"><i class="ti ti-map-pin"></i>大學廣場露天舞台</div>
+        </div>
+        <div class="event-reg">
+          <div class="reg-count"><i class="ti ti-users"></i><span>報名人數</span></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="reg-num">128 / 150</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:85%;background:#97C459;"></div></div>
+          </div>
+        </div>
+        <div class="event-actions">
+          <button class="btn-action btn-edit" onclick="openEdit('2025 夏季音樂節暨社團成果展')"><i class="ti ti-edit" style="font-size:13px;"></i>編輯</button>
+          <button class="btn-action btn-reg" onclick="openReg('2025 夏季音樂節暨社團成果展', 128, 150)"><i class="ti ti-clipboard-list" style="font-size:13px;"></i>報名資訊</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="event-card">
+      <div class="event-thumb event-thumb-5">
+        <i class="ti ti-heart-handshake"></i>
+        <span class="status-badge badge-ended">已結束</span>
+      </div>
+      <div class="event-body">
+        <span class="event-cat">志工服務</span>
+        <div class="event-title">偏鄉教育志工招募說明會</div>
+        <div class="event-meta">
+          <div class="event-meta-row"><i class="ti ti-calendar"></i>2025-05-10　14:00 – 16:00</div>
+          <div class="event-meta-row"><i class="ti ti-map-pin"></i>學生活動中心 302 室</div>
+        </div>
+        <div class="event-reg">
+          <div class="reg-count"><i class="ti ti-users"></i><span>報名人數</span></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="reg-num">45 / 50</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:90%;background:#5DCAA5;"></div></div>
+          </div>
+        </div>
+        <div class="event-actions">
+          <button class="btn-action btn-edit" onclick="openEdit('偏鄉教育志工招募說明會')"><i class="ti ti-edit" style="font-size:13px;"></i>編輯</button>
+          <button class="btn-action btn-reg" onclick="openReg('偏鄉教育志工招募說明會', 45, 50)"><i class="ti ti-clipboard-list" style="font-size:13px;"></i>報名資訊</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="event-card">
+      <div class="event-thumb event-thumb-3">
+        <i class="ti ti-briefcase"></i>
+        <span class="status-badge badge-draft">草稿</span>
+      </div>
+      <div class="event-body">
+        <span class="event-cat">就業實習</span>
+        <div class="event-title">2026 春季企業參訪暨職涯講座</div>
+        <div class="event-meta">
+          <div class="event-meta-row"><i class="ti ti-calendar"></i>尚未設定</div>
+          <div class="event-meta-row"><i class="ti ti-map-pin"></i>待確認</div>
+        </div>
+        <div class="event-reg">
+          <div class="reg-count"><i class="ti ti-users"></i><span>報名人數</span></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="reg-num">— / —</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:0%;"></div></div>
+          </div>
+        </div>
+        <div class="event-actions">
+          <button class="btn-action btn-edit" onclick="openEdit('2026 春季企業參訪暨職涯講座')"><i class="ti ti-edit" style="font-size:13px;"></i>編輯</button>
+          <button class="btn-action btn-reg" onclick="openReg('2026 春季企業參訪暨職涯講座', 0, 0)"><i class="ti ti-clipboard-list" style="font-size:13px;"></i>報名資訊</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── EDIT MODAL ── -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="ti ti-edit"></i><span id="edit-modal-title">編輯活動</span></div>
+      <button class="modal-close" onclick="closeEdit()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+
+      <div class="card-inner">
+        <div class="card-inner-title"><i class="ti ti-info-circle"></i>基本資訊</div>
+        <div class="grid2">
+          <div class="fg full"><label class="lbl">活動名稱<span class="req">*</span></label><input type="text" id="edit-name"></div>
+          <div class="fg full"><label class="lbl">活動簡介</label><textarea rows="2" placeholder="請輸入活動簡介…"></textarea></div>
+          <div class="fg full"><label class="lbl">活動內容說明<span class="req">*</span></label><textarea rows="3" placeholder="詳細說明活動內容、備註事項等…"></textarea></div>
+          <div class="fg"><label class="lbl">承辦單位<span class="req">*</span></label><input type="text" value="學生事務處課外活動指導組"></div>
+          <div class="fg"><label class="lbl">聯絡人</label><input type="text" placeholder="聯絡人姓名"></div>
+          <div class="fg"><label class="lbl">聯絡電話</label><input type="tel" placeholder="02-XXXXXXXX#分機"></div>
+          <div class="fg"><label class="lbl">授課人 / 講師</label><input type="text" placeholder="例：社團同學、教授姓名"></div>
+        </div>
+      </div>
+
+      <div class="card-inner">
+        <div class="card-inner-title"><i class="ti ti-tag"></i>活動分類（台大）</div>
+        <div class="fg" style="margin-bottom:10px;">
+          <label class="lbl">主分類<span class="req">*</span></label>
+          <div class="cat-trigger-e" id="edit-cat-trigger" onclick="toggleEditCat()">
+            <span id="edit-cat-display">請選擇主分類</span>
+            <i class="ti ti-chevron-down"></i>
+          </div>
+          <div class="cat-dd" id="edit-cat-dd">
+            <div class="cat-dd-list" id="edit-cat-list"></div>
+            <div class="cat-dd-add">
+              <input type="text" id="edit-new-cat" placeholder="輸入新分類名稱…" onkeydown="if(event.key==='Enter')addEditCat()">
+              <button onclick="addEditCat()"><i class="ti ti-plus" style="font-size:13px;"></i>新增</button>
+            </div>
+          </div>
+        </div>
+        <div class="fg" style="margin-bottom:6px;"><label class="lbl">標籤（可複選）</label></div>
+        <div class="tags-edit">
+          <span class="tag-e" onclick="this.classList.toggle('on')">#免報名費</span>
+          <span class="tag-e on" onclick="this.classList.toggle('on')">#學生</span>
+          <span class="tag-e" onclick="this.classList.toggle('on')">#教師</span>
+          <span class="tag-e" onclick="this.classList.toggle('on')">#免費餐點</span>
+          <span class="tag-e" onclick="this.classList.toggle('on')">#遠距參加</span>
+          <span class="tag-e" onclick="this.classList.toggle('on')">#校友</span>
+          <span class="tag-e" onclick="this.classList.toggle('on')">#校外人士</span>
+        </div>
+        <div class="fg" style="margin-top:10px;"><label class="lbl">參加對象<span class="req">*</span></label>
+          <select><option>不限</option><option>本校學生</option><option>本校教職員</option><option>校外人士</option><option>自訂</option></select>
+        </div>
+      </div>
+
+      <div class="card-inner">
+        <div class="card-inner-title"><i class="ti ti-clock"></i>時間與地點</div>
+        <div class="grid3">
+          <div class="fg"><label class="lbl">活動日期<span class="req">*</span></label><input type="date"></div>
+          <div class="fg"><label class="lbl">開始時間<span class="req">*</span></label><input type="time"></div>
+          <div class="fg"><label class="lbl">結束時間<span class="req">*</span></label><input type="time"></div>
+          <div class="fg full"><label class="lbl">活動地點<span class="req">*</span></label><input type="text" placeholder="例：綜合體育館(新體)B1桌球室"></div>
+        </div>
+      </div>
+
+      <div class="card-inner">
+        <div class="card-inner-title"><i class="ti ti-forms"></i>報名設定</div>
+        <div class="grid2">
+          <div class="fg"><label class="lbl">報名開始時間<span class="req">*</span></label><input type="datetime-local"></div>
+          <div class="fg"><label class="lbl">報名截止時間<span class="req">*</span></label><input type="datetime-local"></div>
+          <div class="fg"><label class="lbl">報名類型<span class="req">*</span></label>
+            <select><option>自由報名</option><option>審核制</option><option>抽籤制</option></select>
+          </div>
+          <div class="fg"><label class="lbl">名額上限</label><input type="number" placeholder="留空表示無限制" min="1"></div>
+        </div>
+        <div style="margin-top:10px;">
+          <div class="toggle-r">
+            <div><div style="font-size:13px;color:var(--text-primary);">提供用餐</div><div style="font-size:11px;color:var(--text-tertiary);">開啟後報名頁面將顯示「提供用餐」</div></div>
+            <div class="toggle-sw" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="toggle-r">
+            <div><div style="font-size:13px;color:var(--text-primary);">開放候補名單</div><div style="font-size:11px;color:var(--text-tertiary);">額滿後可加入候補，依序遞補</div></div>
+            <div class="toggle-sw" onclick="this.classList.toggle('on')"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-inner">
+        <div class="card-inner-title"><i class="ti ti-photo"></i>封面圖片</div>
+        <div class="img-drop-sm"><i class="ti ti-photo-up"></i><span>點擊上傳或拖曳圖片至此（建議 1200×600）</span></div>
+        <div style="font-size:11px;color:var(--text-tertiary);margin-top:6px;display:flex;align-items:center;gap:4px;"><i class="ti ti-info-circle" style="font-size:13px;"></i>支援 JPG、PNG，上限 5MB</div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost-sm" onclick="closeEdit()">取消</button>
+      <button class="btn-ghost-sm">儲存草稿</button>
+      <button class="btn-primary-sm">儲存變更</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── REG MODAL ── -->
+<div class="modal-overlay" id="reg-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="ti ti-clipboard-list"></i><span id="reg-modal-title">查看活動報名資訊</span></div>
+      <button class="modal-close" onclick="closeReg()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+
+      <div class="reg-toolbar">
+        <div class="reg-toolbar-left">
+          <div class="search-sm"><i class="ti ti-search"></i><input placeholder="搜尋姓名、信箱…"></div>
+          <button class="btn-filter"><i class="ti ti-filter" style="font-size:14px;"></i>篩選狀態</button>
+        </div>
+        <div class="reg-toolbar-right">
+          <button class="btn-export"><i class="ti ti-file-spreadsheet" style="font-size:14px;"></i>匯出 Excel</button>
+        </div>
+      </div>
+
+      <div class="stats-cards">
+        <div class="stat-card"><div class="val" id="reg-total">—</div><div class="lbl">報名總數</div></div>
+        <div class="stat-card"><div class="val" id="reg-confirmed">—</div><div class="lbl">已確認</div></div>
+        <div class="stat-card"><div class="val" id="reg-pending">—</div><div class="lbl">待確認</div></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:32px;"><input type="checkbox"></th>
+              <th style="width:80px;">姓名</th>
+              <th style="width:150px;">電子信箱</th>
+              <th style="width:100px;">報名時間</th>
+              <th style="width:70px;">狀態</th>
+              <th style="width:50px;">操作</th>
+            </tr>
+          </thead>
+          <tbody id="reg-tbody">
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost-sm" onclick="closeReg()">關閉</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var editCats = ['校慶活動','學術講座','社團活動','體育競技','藝文展演','志工服務','就業實習','國際交流'];
+var editSelCat = null;
+var editCatOpen = false;
+
+function renderEditCatList() {
+  var list = document.getElementById('edit-cat-list');
+  list.innerHTML = '';
+  editCats.forEach(function(c, i) {
+    var item = document.createElement('div');
+    item.className = 'cat-dd-item' + (editSelCat === c ? ' sel' : '');
+    item.innerHTML = '<span>' + (editSelCat===c?'✓ ':'') + c + '</span>'
+      + '<span style="font-size:12px;color:var(--text-tertiary);cursor:pointer;padding:2px 6px;border-radius:4px;" '
+      + 'onmouseover="this.style.color=\'#E24B4A\'" onmouseout="this.style.color=\'var(--text-tertiary)\'" '
+      + 'onclick="event.stopPropagation();delEditCat(' + i + ')">✕</span>';
+    item.querySelector('span').addEventListener('click', function() { selEditCat(c); });
+    list.appendChild(item);
+  });
+}
+function selEditCat(c) {
+  editSelCat = c;
+  document.getElementById('edit-cat-display').textContent = c;
+  renderEditCatList();
+  closeEditCatDd();
+}
+function toggleEditCat() {
+  editCatOpen = !editCatOpen;
+  document.getElementById('edit-cat-dd').classList.toggle('open', editCatOpen);
+  document.getElementById('edit-cat-trigger').classList.toggle('open', editCatOpen);
+  if (editCatOpen) renderEditCatList();
+}
+function closeEditCatDd() {
+  editCatOpen = false;
+  document.getElementById('edit-cat-dd').classList.remove('open');
+  document.getElementById('edit-cat-trigger').classList.remove('open');
+}
+function addEditCat() {
+  var input = document.getElementById('edit-new-cat');
+  var val = input.value.trim();
+  if (!val || editCats.indexOf(val) !== -1) return;
+  editCats.push(val);
+  renderEditCatList();
+  input.value = '';
+  input.focus();
+}
+function delEditCat(idx) {
+  if (editSelCat === editCats[idx]) {
+    editSelCat = null;
+    document.getElementById('edit-cat-display').textContent = '請選擇主分類';
+  }
+  editCats.splice(idx, 1);
+  renderEditCatList();
+}
+
+function filterTab(el) {
+  document.querySelectorAll('.filter-tab').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+}
+
+function openEdit(name) {
+  document.getElementById('edit-modal-title').textContent = name ? '編輯活動：' + name : '新增活動';
+  document.getElementById('edit-name').value = name || '';
+  editSelCat = null;
+  document.getElementById('edit-cat-display').textContent = '請選擇主分類';
+  document.getElementById('edit-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeEdit() {
+  document.getElementById('edit-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+var sampleRegs = [
+  { name:'王小明', email:'wang@ntu.edu.tw', date:'2025-10-25', status:'confirmed' },
+  { name:'陳美玲', email:'chen@ntu.edu.tw', date:'2025-10-26', status:'pending' },
+  { name:'李建國', email:'li@ntu.edu.tw',   date:'2025-10-27', status:'confirmed' },
+  { name:'張雅婷', email:'chang@ntu.edu.tw', date:'2025-10-28', status:'cancelled' },
+  { name:'林志偉', email:'lin@ntu.edu.tw',  date:'2025-10-29', status:'confirmed' },
+  { name:'黃淑芬', email:'huang@ntu.edu.tw', date:'2025-10-30', status:'pending' },
+];
+
+function openReg(name, total, cap) {
+  document.getElementById('reg-modal-title').textContent = name + ' — 報名名單';
+  var confirmed = sampleRegs.filter(function(r){ return r.status==='confirmed'; }).length;
+  var pending   = sampleRegs.filter(function(r){ return r.status==='pending'; }).length;
+  document.getElementById('reg-total').textContent = total || sampleRegs.length;
+  document.getElementById('reg-confirmed').textContent = confirmed;
+  document.getElementById('reg-pending').textContent = pending;
+  var tbody = document.getElementById('reg-tbody');
+  tbody.innerHTML = '';
+  sampleRegs.forEach(function(r) {
+    var pillClass = r.status==='confirmed' ? 'pill-ok' : r.status==='pending' ? 'pill-wait' : 'pill-cancel';
+    var pillText  = r.status==='confirmed' ? '已確認' : r.status==='pending' ? '待確認' : '已取消';
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td><input type="checkbox"></td>'
+      + '<td>' + r.name + '</td>'
+      + '<td style="color:var(--accent);">' + r.email + '</td>'
+      + '<td>' + r.date + '</td>'
+      + '<td><span class="pill ' + pillClass + '">' + pillText + '</span></td>'
+      + '<td><i class="ti ti-dots" style="cursor:pointer;color:var(--text-tertiary);font-size:16px;"></i></td>';
+    tbody.appendChild(tr);
+  });
+  document.getElementById('reg-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeReg() {
+  document.getElementById('reg-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('click', function(e) {
+  var dd = document.getElementById('edit-cat-dd');
+  var tr = document.getElementById('edit-cat-trigger');
+  if (editCatOpen && dd && !dd.contains(e.target) && !tr.contains(e.target)) closeEditCatDd();
+  if (e.target === document.getElementById('edit-modal')) closeEdit();
+  if (e.target === document.getElementById('reg-modal')) closeReg();
+});
+</script>
+</body>
+</html>
